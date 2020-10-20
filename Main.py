@@ -7,7 +7,7 @@ from tkinter import scrolledtext
 filename = "/" 
 # Create an empty dictionary 
 d = dict() 
-avoid = ["a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+avoid = [" ", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 def getFrequency():
 
     text = open(filename, "r") 
@@ -53,11 +53,19 @@ def printFrequency():
                            width = 63, height = 4).pack()
 
     else:
-        for key in list(d.keys()): 
-            print_line = key, ":", d[key] 
-            label_test = Label(newWindow, 
-                            text = print_line,
-                            width = 63, height = 1).pack()
+        text_area = scrolledtext.ScrolledText(newWindow, 
+                            width = 60,  
+                            height = 14,  
+                            font = ("Times New Roman", 15))
+        
+        for keys, values in d.items(): 
+            print_line = str(keys) + " : " + str(values) + "\n"
+            text_area.grid(column = 0, pady = 10, padx = 10)
+            text_area.insert(INSERT,print_line) 
+            
+        text_area.configure(state ='disabled')
+
+    newWindow.mainloop()
     
 
 def analyseAndCollectData():  
