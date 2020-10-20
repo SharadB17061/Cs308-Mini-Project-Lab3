@@ -9,9 +9,11 @@ filename = "/"
 d = dict() 
 avoid = ["above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 def getFrequency():
+    
+
     text = open(filename, "r") 
- 
-# Loop through each line of the file 
+
+    # Lop through each line of the file 
     for line in text:  
         line = line.strip() 
     
@@ -28,20 +30,19 @@ def getFrequency():
 # Function for opening the  
 # file explorer window 
 def browseFiles(): 
-    filename = filedialog.askopenfilename(initialdir = "/", 
+    global filename 
+    filename= filedialog.askopenfilename(initialdir = "/", 
                                           title = "Select a File", 
                                           filetypes = (("Text files", 
                                                         "*.txt*"), 
                                                        ("all files", 
                                                         "*.*"))) 
+    
        
     # Change label contents 
        
 def printFrequency():
     newWindow = Toplevel(window)
-    Label(newWindow, 
-          text = filename,
-          width = 63, height = 4).pack()
     if filename == "/":
         label_test = Label(newWindow, 
                            text = "Open The file",
@@ -52,11 +53,13 @@ def printFrequency():
             print_line = key, ":", d[key] 
             label_test = Label(newWindow, 
                             text = print_line,
-                            width = 63, height = 4).pack()
+                            width = 63, height = 1).pack()
     
 
 def analyseAndCollectData():
-    browseFiles()                                                                           
+    browseFiles()   
+    if filename != "/":
+        getFrequency()                                                                        
 # Create the root window 
 window = Tk() 
    
@@ -78,7 +81,7 @@ label_file_explorer = Label(window,
        
 button_explore = Button(window,  
                         text = "Browse Files", 
-                        command = browseFiles)  
+                        command = analyseAndCollectData)  
    
 button_exit = Button(window,  
                      text = "Exit", 
