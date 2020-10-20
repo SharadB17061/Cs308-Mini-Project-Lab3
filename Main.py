@@ -7,7 +7,7 @@ from tkinter import scrolledtext
 filename = "/" 
 # Create an empty dictionary 
 d = dict() 
-avoid = ["above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+avoid = ["a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 def getFrequency():
     
 
@@ -22,10 +22,11 @@ def getFrequency():
         words = line.split(" ") 
     
         for word in words: 
-            if word in d:  #TODO: add a condtion here to not consider words in avoid list here
-                d[word] = d[word] + 1
-            else: 
-                d[word] = 1
+            if word not in avoid:
+                if word in d:  
+                    d[word] = d[word] + 1
+                else: 
+                    d[word] = 1
 
 # Function for opening the  
 # file explorer window 
