@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import filedialog 
 from tkinter import scrolledtext
+from string import punctuation
+from collections import OrderedDict 
 
 class App(Tk):
     def __init__(self):
@@ -13,7 +15,7 @@ class App(Tk):
         self.word_dictionary = dict() 
         self.least_common = []
         self.most_common = []
-        self.skip_words = [" ", "a", "an", "or", "but", "and", "above", "across", "after",        "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+        self.skip_words = ["", " ", "a", "an", "or", "but", "and", "above", "across", "after",        "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 
         self.title("Text Analyzer")
         self.geometry("500x500")
@@ -55,12 +57,14 @@ class App(Tk):
                 line = line.strip() 
                 line = line.lower() 
                 words = line.split(" ") 
-                for word in words: 
+                for word in words:
+                    word = word.strip(punctuation) 
                     if word not in self.skip_words:
                         if word in self.word_dictionary:  
                             self.word_dictionary[word] += 1
                         else: 
                             self.word_dictionary[word] = 1
+            self.word_dictionary = OrderedDict(sorted(self.word_dictionary.items()))                 
 
     def analyze(self):
         if self.file_path:
