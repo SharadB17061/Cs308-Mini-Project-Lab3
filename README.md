@@ -10,6 +10,6 @@ E : Anvay Shah, b17078 <br />
 
 # Setup
 1. install python3
-2. run the python file from your bash by using the cmd
+2. run the python file from your bash by using the cmd <br />
    python3 Main.py
 3. The program will run   
