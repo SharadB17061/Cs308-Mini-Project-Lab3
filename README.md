@@ -9,4 +9,7 @@ D : Sharad Shukla, b17061 <br />
 E : Anvay Shah, b17078 <br />
 
 # Setup
-1. install tkinter
+1. install python3
+2. run the python file from your bash by using the cmd
+   python3 Main.py
+3. The program will run   
