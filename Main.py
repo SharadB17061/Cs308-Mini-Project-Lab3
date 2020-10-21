@@ -37,28 +37,35 @@ class App(Tk):
     def browseFiles(self): 
         """File explorer to choose file and analze"""
 
-        self.file_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
-        self.label_file_explorer.configure(text = self.file_path)
-        self.analyze()
+        temp_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
+        if temp_path:
+            self.file_path = temp_path
+            self.label_file_explorer.configure(text = self.file_path)
+            self.analyze()
  
-    def analyze(self):
+    def generateDictionary(self):
         """Analyzes the file and computes the required statistics
 
         Completed: computing frequency of (non article/preposition) words
         Todo: num_words, num_lines, num_sentences, most_common, least_common
         """
+        if self.file_path:
+            text = open(self.file_path, "r") 
+            for line in text:  
+                line = line.strip() 
+                line = line.lower() 
+                words = line.split(" ") 
+                for word in words: 
+                    if word not in self.skip_words:
+                        if word in self.word_dictionary:  
+                            self.word_dictionary[word] += 1
+                        else: 
+                            self.word_dictionary[word] = 1
 
-        text = open(self.file_path, "r") 
-        for line in text:  
-            line = line.strip() 
-            line = line.lower() 
-            words = line.split(" ") 
-            for word in words: 
-                if word not in self.skip_words:
-                    if word in self.word_dictionary:  
-                        self.word_dictionary[word] += 1
-                    else: 
-                        self.word_dictionary[word] = 1
+    def analyze(self):
+        if self.file_path:
+            self.word_dictionary = dict()
+            self.generateDictionary() 
 
     def printFrequency(self):
         """Displays the necessary statistics in a new window"""
