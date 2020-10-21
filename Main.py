@@ -1,126 +1,85 @@
 from tkinter import *
-   
-# import filedialog module 
 from tkinter import filedialog 
 from tkinter import scrolledtext
 
-filename = "/" 
-# Create an empty dictionary 
-d = dict() 
-avoid = [" ", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
-def getFrequency():
+class App(Tk):
+    def __init__(self):
+        super().__init__()
+        self.file_path = ""
+        self.keywords_file = ""
+        self.num_words = 0
+        self.num_sentences = 0
+        self.num_newlines = 0
+        self.word_dictionary = dict() 
+        self.least_common = []
+        self.most_common = []
+        self.skip_words = [" ", "a", "an", "or", "but", "and", "above", "across", "after",        "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 
-    text = open(filename, "r") 
+        self.title("Text Analyzer")
+        self.geometry("500x500")
+        self.config(background = "white")
 
-    # Lop through each line of the file 
-    for line in text:  
-        line = line.strip() 
-    
-        line = line.lower() 
-    
-        words = line.split(" ") 
-    
-        for word in words: 
-            if word not in avoid:
-                if word in d:  
-                    d[word] = d[word] + 1
-                else: 
-                    d[word] = 1
-    
-
-# Function for opening the  
-# file explorer window 
-def browseFiles(): 
-    temp_name = filedialog.askopenfilename(initialdir = "/", 
-                                          title = "Select a File", 
-                                          filetypes = (("Text files", 
-                                                        "*.txt*"), 
-                                                       ("all files", 
-                                                        "*.*"))) 
-    if temp_name:
-        label_file_explorer.configure(text = temp_name)
-        global filename
-        filename = temp_name
-        analyseAndCollectData()
-    
-    # Change label contents glob
-       
-def printFrequency():
-    newWindow = Toplevel(window)
-    if filename == "/":
-        label_test = Label(newWindow, 
-                           text = "Open The file",
-                           width = 63, height = 4).pack()
-
-    else:
-        text_area = scrolledtext.ScrolledText(newWindow, 
-                            width = 60,  
-                            height = 14,  
-                            font = ("Times New Roman", 15))
-        
-        for keys, values in d.items(): 
-            print_line = str(keys) + " : " + str(values) + "\n"
-            text_area.grid(column = 0, pady = 10, padx = 10)
-            text_area.insert(INSERT,print_line) 
-            
-        text_area.configure(state ='disabled')
-
-    newWindow.mainloop()
-    
-
-def analyseAndCollectData():  
-    global d
-    d = dict() 
-    if filename != "/":
-        getFrequency()                                                                        
-# Create the root window 
-window = Tk() 
-   
-# Set window title 
-window.title('Text Analyser') 
-   
-# Set window size 
-window.geometry("500x500") 
-   
-#Set window background color 
-window.config(background = "white") 
-   
-# Create a File Explorer label 
-label_file_explorer = Label(window,  
+        self.label_file_explorer = Label(self,  
                             text = "File Explorer using Tkinter", 
                             width = 100, height = 4,  
                             fg = "blue") 
    
-       
-button_explore = Button(window,  
-                        text = "Browse Files", 
-                        command = browseFiles)  
-   
-button_exit = Button(window,  
-                     text = "Exit", 
-                     command = exit)  
+        self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles)  
+        self.button_exit = Button(self, text = "Exit", command = exit)
+        self.button_get_frequency = Button(self, text = "Get Frequency", command = self.printFrequency)
+        self.button_update_file = Button(self, text = "Update File", command = self.analyze)
+        self.label_file_explorer.grid(column = 1, row = 1)
+        self.button_browse.grid(column = 1, row = 3)
+        self.button_exit.grid(column = 1,row = 5)
+        self.button_get_frequency.grid(column = 1, row = 2)
+        self.button_update_file.grid(column = 1, row = 4)
 
-button_get_frequency = Button(window, 
-                             text = "Get Frequency", 
-                             command = printFrequency)
+    def browseFiles(self): 
+        """File explorer to choose file and analze"""
 
-button_update_file = Button(window,
-                            text = "Update File",
-                            command = analyseAndCollectData)
-   
-# Grid method is chosen for placing 
-# the widgets at respective positions  
-# in a table like structure by 
-# specifying rows and columns 
-label_file_explorer.grid(column = 1, row = 1) 
-   
-button_explore.grid(column = 1, row = 3) 
-   
-button_exit.grid(column = 1,row = 5) 
+        self.file_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
+        self.label_file_explorer.configure(text = self.file_path)
+        self.analyze()
+ 
+    def analyze(self):
+        """Analyzes the file and computes the required statistics
 
-button_get_frequency.grid(column = 1, row = 2)
+        Completed: computing frequency of (non article/preposition) words
+        Todo: num_words, num_lines, num_sentences, most_common, least_common
+        """
 
-button_update_file.grid(column = 1, row = 4)
-   
-# Let the window wait for any events 
-window.mainloop() 
+        text = open(self.file_path, "r") 
+        for line in text:  
+            line = line.strip() 
+            line = line.lower() 
+            words = line.split(" ") 
+            for word in words: 
+                if word not in self.skip_words:
+                    if word in self.word_dictionary:  
+                        self.word_dictionary[word] += 1
+                    else: 
+                        self.word_dictionary[word] = 1
+
+    def printFrequency(self):
+        """Displays the necessary statistics in a new window"""
+
+        newWindow = Toplevel(self)
+        if self.file_path == "/":
+            label_test = Label(newWindow, 
+                            text = "Open The file",
+                            width = 63, height = 4).pack()
+        else:
+            text_area = scrolledtext.ScrolledText(newWindow, 
+                                width = 60,  
+                                height = 14,  
+                                font = ("Times New Roman", 15))
+            for keys, values in self.word_dictionary.items(): 
+                print_line = str(keys) + " : " + str(values) + "\n"
+                text_area.grid(column = 0, pady = 10, padx = 10)
+                text_area.insert(INSERT,print_line) 
+            text_area.configure(state ='disabled')
+        newWindow.mainloop()
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
