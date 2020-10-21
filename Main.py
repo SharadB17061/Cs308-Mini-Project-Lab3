@@ -3,6 +3,8 @@ from tkinter import filedialog
 from tkinter import scrolledtext
 from string import punctuation
 from collections import OrderedDict 
+import numpy as np
+import matplotlib.pyplot as plt
 
 class App(Tk):
     def __init__(self):
@@ -15,7 +17,7 @@ class App(Tk):
         self.word_dictionary = dict() 
         self.least_common = []
         self.most_common = []
-        self.skip_words = ["", " ", "a", "an", "or", "but", "and", "above", "across", "after",        "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+        self.skip_words = ["", " ", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 
         self.title("Text Analyzer")
         self.geometry("500x500")
@@ -29,11 +31,13 @@ class App(Tk):
         self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles)  
         self.button_exit = Button(self, text = "Exit", command = exit)
         self.button_get_frequency = Button(self, text = "Get Frequency", command = self.printFrequency)
+        self.button_show_histogram = Button(self, text = "Show Histogram", command = self.showHistogram)
         self.button_update_file = Button(self, text = "Update File", command = self.analyze)
         self.label_file_explorer.grid(column = 1, row = 1)
         self.button_browse.grid(column = 1, row = 3)
-        self.button_exit.grid(column = 1,row = 5)
+        self.button_exit.grid(column = 1,row = 6)
         self.button_get_frequency.grid(column = 1, row = 2)
+        self.button_show_histogram.grid(column = 1, row = 5)
         self.button_update_file.grid(column = 1, row = 4)
 
     def browseFiles(self): 
@@ -90,6 +94,19 @@ class App(Tk):
                 text_area.insert(INSERT,print_line) 
             text_area.configure(state ='disabled')
         newWindow.mainloop()
+
+    def showHistogram(self):
+        if(self.file_path):
+            my_colors = [(x/(len(self.word_dictionary)+20), x/(len(self.word_dictionary)+100), 0.75) for x in range(len(self.word_dictionary))]
+            plt.bar(list(self.word_dictionary.keys()), self.word_dictionary.values(),color=my_colors, width=0.5)
+            plt.title('Word Frequency')
+            plt.xlabel('Words')
+            plt.ylabel('Frequency')
+            plt.show()
+        else:
+            self.label_file_explorer.configure(text="Please select the file")
+
+
 
 if __name__ == "__main__":
     app = App()
