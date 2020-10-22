@@ -5,6 +5,7 @@ from string import punctuation
 from collections import OrderedDict 
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 class App(Tk):
     def __init__(self):
@@ -33,12 +34,16 @@ class App(Tk):
         self.button_get_frequency = Button(self, text = "Get Frequency", command = self.printFrequency)
         self.button_show_histogram = Button(self, text = "Show Histogram", command = self.showHistogram)
         self.button_update_file = Button(self, text = "Update File", command = self.analyze)
+        self.button_keyword_file = Button(self, text = "Choose File with keywords", command = self.browseKeywordFiles)
+        self.button_displayKeywordSentences = Button(self, text = "Display sentences with keywords", command = self.displayKeywordSentences)
         self.label_file_explorer.grid(column = 1, row = 1)
         self.button_browse.grid(column = 1, row = 3)
         self.button_exit.grid(column = 1,row = 6)
         self.button_get_frequency.grid(column = 1, row = 2)
         self.button_show_histogram.grid(column = 1, row = 5)
         self.button_update_file.grid(column = 1, row = 4)
+        self.button_keyword_file.grid(column = 1, row = 7)
+        self.button_displayKeywordSentences.grid(column = 1, row = 8)
 
     def browseFiles(self): 
         """File explorer to choose file and analze"""
@@ -48,6 +53,14 @@ class App(Tk):
             self.file_path = temp_path
             self.label_file_explorer.configure(text = self.file_path)
             self.analyze()
+
+    def browseKeywordFiles(self): 
+        """File explorer to choose keyword file"""
+
+        temp_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
+        if temp_path:
+            self.keywords_file = temp_path
+            self.label_file_explorer.configure(text = self.keywords_file)
  
     def generateDictionary(self):
         """Analyzes the file and computes the required statistics
@@ -68,7 +81,8 @@ class App(Tk):
                             self.word_dictionary[word] += 1
                         else: 
                             self.word_dictionary[word] = 1
-            self.word_dictionary = OrderedDict(sorted(self.word_dictionary.items()))                 
+            self.word_dictionary = OrderedDict(sorted(self.word_dictionary.items()))       
+            text.close()          
 
     def analyze(self):
         if self.file_path:
@@ -105,6 +119,60 @@ class App(Tk):
             plt.show()
         else:
             self.label_file_explorer.configure(text="Please select the file")
+
+    def displayKeywordSentences(self):
+        if(self.keywords_file and self.file_path):
+            k = open(self.keywords_file, "r")
+            keywords = []
+            for keyword in k:
+                keyword = keyword.strip('\n')
+                keywords =  keywords + [keyword]
+            k.close()
+
+            f = open(self.file_path, "r")
+            temp_f = open("temp_keywords.txt", "w")
+
+            for line in f:
+                buffer = line.replace("\n", "")
+                buffer = line.replace("\t", "")
+                buffer = buffer.replace(". ", ".\n")
+
+                temp_f.write(buffer)
+
+            f.close()
+            temp_f.close()
+
+            temp_f = open("temp_keywords.txt", "r")
+
+            containskeyword = False
+
+            newWindow = Toplevel(self)
+
+            text_area = scrolledtext.ScrolledText(newWindow, 
+                                width = 100,  
+                                height = 30,  
+                                font = ("Times New Roman", 15))
+
+            for sentence in temp_f:
+                for keyword in keywords:
+                    if keyword in sentence:
+                        containskeyword = True
+                
+                if containskeyword == True:
+                    containskeyword = False
+                    #print sentence to window
+                    sentence = sentence + '\n'
+                    text_area.grid(column = 0, pady = 10, padx = 10)
+                    text_area.insert(INSERT,sentence)
+
+            temp_f.close()
+            os.remove("temp_keywords.txt")
+
+            text_area.configure(state ='disabled')
+            newWindow.mainloop()
+
+        else:
+            self.label_file_explorer.configure(text="Please select both the files")
 
 
 
