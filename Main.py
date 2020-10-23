@@ -18,7 +18,7 @@ class App(Tk):
         self.word_dictionary = dict() 
         self.least_common = []
         self.most_common = []
-        self.skip_words = ["", " ", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+        self.skip_words = ["", " ", "	", "is", "are", "was", "were", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 
         self.title("Text Analyzer")
         self.geometry("500x500")
@@ -32,6 +32,8 @@ class App(Tk):
         self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles)  
         self.button_exit = Button(self, text = "Exit", command = exit)
         self.button_get_frequency = Button(self, text = "Get Frequency", command = self.printFrequency)
+        self.button_get_most_least_frequency = Button(self, text = "Get Most & Least frequent word", command = self.printLeastMostFrequency)
+        self.button_get_no_of_lines_sentences = Button(self, text = "Get no. of lines & sentences", command = self.printNoOfLinesSentences)
         self.button_show_histogram = Button(self, text = "Show Histogram", command = self.showHistogram)
         self.button_update_file = Button(self, text = "Update File", command = self.analyze)
         self.button_keyword_file = Button(self, text = "Choose File with keywords", command = self.browseKeywordFiles)
@@ -40,13 +42,15 @@ class App(Tk):
         self.button_browse.grid(column = 1, row = 3)
         self.button_exit.grid(column = 1,row = 6)
         self.button_get_frequency.grid(column = 1, row = 2)
+        self.button_get_most_least_frequency.grid(column = 1, row = 7)
+        self.button_get_no_of_lines_sentences.grid(column = 1, row = 8)
         self.button_show_histogram.grid(column = 1, row = 5)
         self.button_update_file.grid(column = 1, row = 4)
         self.button_keyword_file.grid(column = 1, row = 7)
         self.button_displayKeywordSentences.grid(column = 1, row = 8)
 
     def browseFiles(self): 
-        """File explorer to choose file and analze"""
+        """File explorer to choose file and analyze"""
 
         temp_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
         if temp_path:
@@ -106,6 +110,85 @@ class App(Tk):
                 print_line = str(keys) + " : " + str(values) + "\n"
                 text_area.grid(column = 0, pady = 10, padx = 10)
                 text_area.insert(INSERT,print_line) 
+            text_area.configure(state ='disabled')
+        newWindow.mainloop()
+
+    def printLeastMostFrequency(self):
+        """Displays the necessary statistics in a new window"""
+
+        newWindow = Toplevel(self)
+        if self.file_path == "/":
+            label_test = Label(newWindow, 
+                            text = "Open The file",
+                            width = 63, height = 4).pack()
+        else:
+            text_area = scrolledtext.ScrolledText(newWindow, 
+                                width = 60,  
+                                height = 14,  
+                                font = ("Times New Roman", 15))
+
+            print_line = "Word(s) with max frequency is/are : \n"
+            text_area.grid(column = 0, pady = 10, padx = 10)
+            text_area.insert(INSERT,print_line)
+
+            itemMaxValue = max(self.word_dictionary.items(), key=lambda x: x[1])
+            for key, value in self.word_dictionary.items():
+                if value == itemMaxValue[1]:
+                    print_line = str(key) + "\n"
+                    text_area.grid(column = 0, pady = 10, padx = 10)
+                    text_area.insert(INSERT,print_line)
+
+            print_line = "Word(s) with min frequency is/are : \n"
+            text_area.grid(column = 0, pady = 10, padx = 10)
+            text_area.insert(INSERT,print_line)
+            
+            itemMinValue = min(self.word_dictionary.items(), key=lambda x: x[1])
+            for key, value in self.word_dictionary.items():
+                if value == itemMinValue[1]:
+                    print_line = str(key) + "\n"
+                    text_area.grid(column = 0, pady = 10, padx = 10)
+                    text_area.insert(INSERT,print_line)
+
+            text_area.configure(state ='disabled')
+        newWindow.mainloop()
+
+    def printNoOfLinesSentences(self):
+        """Displays the necessary statistics in a new window"""
+
+        if self.file_path:
+            text = open(self.file_path, "r") 
+            Content = text.read() 
+            CoList = Content.split("\n") 
+            SentenceCounter = 0
+            Counter = 0
+            for i in CoList: 
+                if i: 
+                    Counter += 1
+            
+            for line in text:  
+                SentenceCounter += line.count('.') + line.count('!') + line.count('?') 
+
+            SentenceCounter = max(SentenceCounter, Counter)
+
+        newWindow = Toplevel(self)
+        if self.file_path == "/":
+            label_test = Label(newWindow, 
+                            text = "Open The file",
+                            width = 63, height = 4).pack()
+        else:
+            text_area = scrolledtext.ScrolledText(newWindow, 
+                                width = 60,
+                                height = 14,  
+                                font = ("Times New Roman", 15))
+            
+            print_line = "The number of newlines is : " + str(Counter) + "\n"
+            text_area.grid(column = 0, pady = 10, padx = 10)
+            text_area.insert(INSERT,print_line) 
+            
+            print_line = "The number of sentences is : " + str(SentenceCounter) + "\n"
+            text_area.grid(column = 0, pady = 10, padx = 10)
+            text_area.insert(INSERT,print_line) 
+            
             text_area.configure(state ='disabled')
         newWindow.mainloop()
 
