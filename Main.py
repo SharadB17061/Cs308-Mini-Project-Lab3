@@ -21,13 +21,14 @@ class App(Tk):
         self.skip_words = ["", " ", "	", "is", "are", "was", "were", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
 
         self.title("Text Analyzer")
-        self.geometry("500x500")
+        self.geometry("700x500")
         self.config(background = "white")
 
         self.label_file_explorer = Label(self,  
                             text = "File Explorer using Tkinter", 
                             width = 100, height = 4,  
                             fg = "blue") 
+                            
    
         self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles)  
         self.button_exit = Button(self, text = "Exit", command = exit)
@@ -38,16 +39,16 @@ class App(Tk):
         self.button_update_file = Button(self, text = "Update File", command = self.analyze)
         self.button_keyword_file = Button(self, text = "Choose File with keywords", command = self.browseKeywordFiles)
         self.button_displayKeywordSentences = Button(self, text = "Display sentences with keywords", command = self.displayKeywordSentences)
-        self.label_file_explorer.grid(column = 1, row = 1)
-        self.button_browse.grid(column = 1, row = 3)
-        self.button_exit.grid(column = 1,row = 6)
-        self.button_get_frequency.grid(column = 1, row = 2)
-        self.button_get_most_least_frequency.grid(column = 1, row = 7)
-        self.button_get_no_of_lines_sentences.grid(column = 1, row = 8)
-        self.button_show_histogram.grid(column = 1, row = 5)
-        self.button_update_file.grid(column = 1, row = 4)
-        self.button_keyword_file.grid(column = 1, row = 7)
-        self.button_displayKeywordSentences.grid(column = 1, row = 8)
+        self.label_file_explorer.grid(row = 1, columnspan = 3)
+        self.button_get_frequency.grid(row = 2)
+        self.button_browse.grid(row = 3)
+        self.button_update_file.grid(row = 4)
+        self.button_show_histogram.grid(row = 5)
+        self.button_get_most_least_frequency.grid(row = 6)
+        self.button_get_no_of_lines_sentences.grid(row = 7)
+        self.button_keyword_file.grid(row = 8)
+        self.button_displayKeywordSentences.grid(row = 9)
+        self.button_exit.grid(row = 10)
 
     def browseFiles(self): 
         """File explorer to choose file and analyze"""
