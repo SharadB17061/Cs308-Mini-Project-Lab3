@@ -18,38 +18,29 @@ class App(Tk):
         self.word_dictionary = dict() 
         self.least_common = []
         self.most_common = []
-        self.skip_words = ["", " ", "	", "is", "are", "was", "were", "a", "an", "or", "but", "and", "above", "across", "after", "against", "along", "among", "around", "at", "before", "behind", "below", "beneath", "beside", "between", "by", "down", "during", "for", "from", "in", "inside", "into", "near", "off", "on", "onto", "out of", "outside", "over", "through", "till", "to", "toward", "towards", "under", "underneath", "until", "up"]   
+        self.skip_words = ["", " ", "	", "ourselves", "hers", "between", "yourself", "but", "again", "there", "about", "once", "during", "out", "very", "having", "with", "they", "own", "an", "be", "some", "for", "do", "its", "yours", "such", "into", "of", "most", "itself", "other", "off", "is", "s", "am", "or", "who", "as", "from", "him", "each", "the", "themselves", "until", "below", "are", "we", "these", "your", "his", "through", "don", "nor", "me", "were", "her", "more", "himself", "this", "down", "should", "our", "their", "while", "above", "both", "up", "to", "ours", "had", "she", "all", "no", "when", "at", "any", "before", "them", "same", "and", "been", "have", "in", "will", "on", "does", "yourselves", "then", "that", "because", "what", "over", "why", "so", "can", "did", "not", "now", "under", "he", "you", "herself", "has", "just", "where", "too", "only", "myself", "which", "those", "i", "after", "few", "whom", "t", "being", "if", "theirs", "my", "against", "a", "by", "doing", "it", "how", "further", "was", "here", "than"]
 
         self.title("Text Analyzer")
         self.geometry("700x500")
-        # self.config(background = "white")
 
         self.label_file_explorer = Label(self,  
                             text = "File Explorer using Tkinter", 
                             width = 100, height = 4,  
                             fg = "blue") 
         self.label_file_stats = Label(self, text = "Choose a file to display relevant statistics")
-        # self.textarea_frequent_words = scrolledtext.ScrolledText(self)
    
         self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles, width=20)  
         self.button_exit = Button(self, text = "Exit", command = exit, width=20)
-        # self.button_get_frequency = Button(self, text = "Get Frequency", command = self.printFrequency)
-        # self.button_get_most_least_frequency = Button(self, text = "Get Most & Least frequent word", command = self.printLeastMostFrequency)
-        # self.button_get_no_of_lines_sentences = Button(self, text = "Get no. of lines & sentences", command = self.printNoOfLinesSentences)
         self.button_show_histogram = Button(self, text = "Show Histogram", command = self.showHistogram, width=20)
         self.button_update_file = Button(self, text = "Update File", command = self.analyze, width=20)
         self.button_keyword_file = Button(self, text = "Browse Keyword File", command = self.browseKeywordFiles, width=20)
         self.button_displayKeywordSentences = Button(self, text = "Keyword Sentences", command = self.displayKeywordSentences, width=20)
 
         self.label_file_explorer.grid(column = 0, row = 1, columnspan = 3)
-        # self.button_get_frequency.grid(column = 2, row = 2)
         self.label_file_stats.grid(column = 0, row = 2, columnspan = 2, rowspan = 3)
         self.button_browse.grid(column = 2, row = 3)
         self.button_update_file.grid(column = 2, row = 4)
         self.button_show_histogram.grid(column = 2, row = 5)
-        # self.textarea_frequent_words.grid(column = 1, row = 5, columnspan = 2, rowspan = 3)
-        # self.button_get_most_least_frequency.grid(column = 2, row = 6)
-        # self.button_get_no_of_lines_sentences.grid(column = 2, row = 7)
         self.button_keyword_file.grid(column = 2, row = 6)
         self.button_displayKeywordSentences.grid(column = 2, row = 7)
         self.button_exit.grid(column = 2, row = 8)
@@ -163,27 +154,6 @@ class App(Tk):
             word_counter = len(Content.split())
             file_stats = "Num Words: " + str(word_counter) + "\nNum Sentences: " + str(SentenceCounter) + "\nNum Newlines: " + str(Counter)
             self.label_file_stats.configure(text = file_stats)
-        # newWindow = Toplevel(self)
-        # if not self.file_path:
-        #     label_test = Label(newWindow, 
-        #                     text = "Open The file",
-        #                     width = 63, height = 4).pack()
-        # else:
-        #     text_area = scrolledtext.ScrolledText(newWindow, 
-        #                         width = 60,
-        #                         height = 14,  
-        #                         font = ("Times New Roman", 15))
-            
-        #     print_line = "The number of newlines is : " + str(Counter) + "\n"
-        #     text_area.grid(column = 0, pady = 10, padx = 10)
-        #     text_area.insert(INSERT,print_line) 
-            
-        #     print_line = "The number of sentences is : " + str(SentenceCounter) + "\n"
-        #     text_area.grid(column = 0, pady = 10, padx = 10)
-        #     text_area.insert(INSERT,print_line) 
-            
-        #     text_area.configure(state ='disabled')
-        # newWindow.mainloop()
 
     def showHistogram(self):
         if(self.file_path):
