@@ -24,15 +24,15 @@ class App(Tk):
         self.geometry("700x500")
 
         self.label_file_explorer = Label(self,  
-                            text = "File Explorer using Tkinter", 
+                            text = "Text Analyzer", 
                             width = 100, height = 4,  
                             fg = "blue") 
         self.label_file_stats = Label(self, text = "Choose a file to display relevant statistics")
    
         self.button_browse = Button(self, text = "Browse Files", command = self.browseFiles, width=20)  
         self.button_exit = Button(self, text = "Exit", command = exit, width=20)
-        self.button_show_histogram = Button(self, text = "Show Histogram", command = self.showHistogram, width=20)
-        self.button_update_file = Button(self, text = "Update File", command = self.analyze, width=20)
+        self.button_show_histogram = Button(self, text = "Plot Word Frequencies", command = self.showHistogram, width=20)
+        self.button_update_file = Button(self, text = "Refresh Stats", command = self.analyze, width=20)
         self.button_keyword_file = Button(self, text = "Browse Keyword File", command = self.browseKeywordFiles, width=20)
         self.button_displayKeywordSentences = Button(self, text = "Keyword Sentences", command = self.displayKeywordSentences, width=20)
 
@@ -51,7 +51,7 @@ class App(Tk):
         temp_path = filedialog.askopenfilename(title = "Select a File", filetypes = (("Text Files", "*.txt"), ("All Files", "*"))) 
         if temp_path:
             self.file_path = temp_path
-            self.label_file_explorer.configure(text = self.file_path)
+            self.label_file_explorer.configure(text = "File: " + self.file_path)
             self.analyze()
 
     def browseKeywordFiles(self): 
@@ -94,10 +94,11 @@ class App(Tk):
                                 height = 8,  
                                 font = ("Times New Roman", 11))
             text_area_title = "Word frequencies are:\n"
+            text_area.grid(column = 0, row = 14, columnspan = 2, rowspan = 12, sticky=W+N, padx=10, pady=10)
             text_area.insert(INSERT, text_area_title)
             for keys, values in self.word_dictionary.items(): 
                 print_line = str(keys) + " : " + str(values) + "\n"
-                text_area.grid(column = 0, row = 14, columnspan = 2, rowspan = 12)
+                # text_area.grid(column = 0, row = 14, columnspan = 2, rowspan = 12, sticky=W+N, padx=10, pady=10)
                 text_area.insert(INSERT,print_line) 
             text_area.configure(state ='disabled')
 
@@ -110,26 +111,26 @@ class App(Tk):
                                 height = 8,  
                                 font = ("Times New Roman", 11))
 
-            print_line = "Word(s) with max frequency is/are : \n"
-            text_area.grid(column = 2, row = 5, columnspan = 2, rowspan = 7, sticky=W+N)
+            itemMaxValue = max(self.word_dictionary.items(), key=lambda x: x[1])
+            print_line = "Word(s) with max frequency (" + str(itemMaxValue[1]) + ") is/are: \n"
+            text_area.grid(column = 0, row = 5, columnspan = 2, rowspan = 7, sticky=W+N, padx=10, pady=10)
             text_area.insert(INSERT,print_line)
 
-            itemMaxValue = max(self.word_dictionary.items(), key=lambda x: x[1])
             for key, value in self.word_dictionary.items():
                 if value == itemMaxValue[1]:
                     print_line = str(key) + "\n"
-                    text_area.grid(column = 0, pady = 10, padx = 10)
+                    # text_area.grid(column = 0, pady = 10, padx = 10)
                     text_area.insert(INSERT,print_line)
 
-            print_line = "Word(s) with min frequency is/are : \n"
-            text_area.grid(column = 0, pady = 10, padx = 10)
+            itemMinValue = min(self.word_dictionary.items(), key=lambda x: x[1])
+            print_line = "Word(s) with min frequency (" + str(itemMinValue[1]) + ") is/are: \n"
+            # text_area.grid(column = 0, pady = 10, padx = 10)
             text_area.insert(INSERT,print_line)
             
-            itemMinValue = min(self.word_dictionary.items(), key=lambda x: x[1])
             for key, value in self.word_dictionary.items():
                 if value == itemMinValue[1]:
                     print_line = str(key) + "\n"
-                    text_area.grid(column = 0, pady = 10, padx = 10)
+                    # text_area.grid(column = 0, pady = 10, padx = 10)
                     text_area.insert(INSERT,print_line)
 
             text_area.configure(state ='disabled')
@@ -147,8 +148,7 @@ class App(Tk):
                 if i: 
                     Counter += 1
             
-            for line in text:  
-                SentenceCounter += line.count('.') + line.count('!') + line.count('?') 
+            SentenceCounter += Content.count('.') + Content.count('!') + Content.count('?') 
 
             SentenceCounter = max(SentenceCounter, Counter)
             word_counter = len(Content.split())
