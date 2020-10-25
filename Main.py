@@ -66,13 +66,14 @@ class App(Tk):
             self.keywords_file = temp_path
             self.label_file_explorer.configure(text = self.keywords_file)
  
-    def generateDictionary(self):
+    def analyze(self):
         """Analyzes the file and computes the required statistics
 
         Completed: computing frequency of (non article/preposition) words
         Todo: num_words, num_lines, num_sentences, most_common, least_common
         """
         if self.file_path:
+            self.word_dictionary = dict()
             text = open(self.file_path, "r") 
             for line in text:  
                 line = line.strip() 
@@ -88,16 +89,11 @@ class App(Tk):
             self.word_dictionary = OrderedDict(sorted(self.word_dictionary.items()))       
             text.close()          
 
-    def analyze(self):
-        if self.file_path:
-            self.word_dictionary = dict()
-            self.generateDictionary() 
-
     def printFrequency(self):
         """Displays the necessary statistics in a new window"""
 
         newWindow = Toplevel(self)
-        if self.file_path == "/":
+        if not self.file_path:
             label_test = Label(newWindow, 
                             text = "Open The file",
                             width = 63, height = 4).pack()
@@ -117,7 +113,7 @@ class App(Tk):
         """Displays the necessary statistics in a new window"""
 
         newWindow = Toplevel(self)
-        if self.file_path == "/":
+        if not self.file_path:
             label_test = Label(newWindow, 
                             text = "Open The file",
                             width = 63, height = 4).pack()
@@ -171,7 +167,7 @@ class App(Tk):
             SentenceCounter = max(SentenceCounter, Counter)
 
         newWindow = Toplevel(self)
-        if self.file_path == "/":
+        if not self.file_path:
             label_test = Label(newWindow, 
                             text = "Open The file",
                             width = 63, height = 4).pack()
